@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
 
+env:
+  STARTUP_COMMAND: "uvicorn main:app"
+
 permissions:
   contents: read
   id-token: write
@@ -33,4 +36,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: atharvaacn-test-app
+          startup-command: ${{ env.STARTUP_COMMAND}}
           package: .
