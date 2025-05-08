@@ -23,29 +23,22 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.13
-          cache: "pip"
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
+      #       cache: "pip"
+      #   - name: Create and start virtual environment
+      #     run: |
+      #       python -m venv venv
+      #       source venv/bin/activate
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Upload artifact for deployment jobs
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-app
-          path: |
-            .
-            !venv/
-
-  deploy:
-    needs: build
-    environment:
-      name: Production
-    runs-on: ubuntu-latest
-    steps:
+      #   - name: Upload artifact for deployment jobs
+      #     uses: actions/upload-artifact@v4
+      #     with:
+      #       name: python-app
+      #       path: |
+      #         .
+      #         !venv/
       - name: Azure Login
         uses: azure/login@v2
         with:
@@ -53,14 +46,32 @@ jobs:
           subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
           tenant-id: ${{secrets.AZURE_TENANT_ID}}
 
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: python-app
-          path: .
-
       - name: Deploy to webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: atharvaacn-test-app
           startup-command: ${{ env.STARTUP_COMMAND}}
+#   deploy:
+#     needs: build
+#     environment:
+#       name: Production
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Azure Login
+#         uses: azure/login@v2
+#         with:
+#           client-id: ${{secrets.AZURE_CLIENT_ID}}
+#           subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}}
+#           tenant-id: ${{secrets.AZURE_TENANT_ID}}
+
+#       - name: Download artifact from build job
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: python-app
+#           path: .
+
+#       - name: Deploy to webapp
+#         uses: azure/webapps-deploy@v2
+#         with:
+#           app-name: atharvaacn-test-app
+#           startup-command: ${{ env.STARTUP_COMMAND}}
